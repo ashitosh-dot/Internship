@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Signup</title>
+    <style>
+        /* General body styles */
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(to right, #00aaff, #ffdd00); /* Gradient from blue to yellow */
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        /* Heading Styles */
+        h2 {
+            font-size: 3rem;
+            margin-bottom: 30px;
+            color: #ffffff;
+            text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Form Container */
+        form {
+            background-color: #ffffff;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 380px;
+            transition: transform 0.3s ease;
+        }
+
+        form:hover {
+            transform: translateY(-5px);
+        }
+
+        /* Label Styling */
+        label {
+            font-size: 1rem;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        /* Input Fields */
+        input[type="text"],
+        input[type="email"],
+        input[type="password"] {
+            width: 100%;
+            padding: 14px;
+            margin-top: 8px;
+            margin-bottom: 20px;
+            border: 2px solid #ffdd00;
+            border-radius: 8px;
+            font-size: 1rem;
+            background-color: #f9f9f9;
+            transition: all 0.3s ease;
+        }
+
+        input[type="text"]:focus,
+        input[type="email"]:focus,
+        input[type="password"]:focus {
+            border-color: #00aaff;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 170, 255, 0.5);
+            outline: none;
+        }
+
+        /* Submit Button */
+        button {
+            background-color: #00aaff;
+            color: #fff;
+            border: none;
+            padding: 14px;
+            border-radius: 8px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            cursor: pointer;
+            width: 100%;
+            transition: 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #0088cc;
+            transform: scale(1.05);
+        }
+
+        /* Footer Text */
+        p {
+            font-size: 1rem;
+            color: #333;
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        /* Links Styling */
+        a {
+            color: #ffdd00;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        /* Error Messages */
+        p[style] {
+            color: #e74c3c;
+            margin-top: 15px;
+            font-weight: bold;
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+    <h2>Signup</h2>
+    <form method="POST" onsubmit="return validateForm()">
+        <label for="name">User Name</label>
+        <input type="text" id="name" name="name" placeholder="Enter your full name" required>
+
+        <label for="email">Email</label>
+        <input type="email" id="email" name="email" placeholder="Enter your Email" required>
+
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password" placeholder="Create New Password" required>
+
+        <button type="submit">Signup</button>
+    </form>
+    <p>Already have an account? <a href="{{ url_for('login') }}">Login here</a></p>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% for category, message in messages %}
+    <p style="color: red;">{{ message }}</p>
+    {% endfor %}
+    {% endwith %}
+
+    <script>
+        function validateForm() {
+            const name = document.getElementById('name').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const password = document.getElementById('password').value;
+
+            const namePattern = /^(?=.*[A-Za-z])[A-Za-z0-9 ]+$/;
+            const emailPattern = /^(?=.*\d)[^\s@]+@[^\s@]+\.(com)$/i;
+
+            if (!namePattern.test(name)) {
+                alert("Name must contain only letters and numbers, and at least one letter.");
+                return false;
+            }
+
+            if (!emailPattern.test(email)) {
+                alert("Please enter a valid email address that contains at least one number and ends with .com.");
+                return false;
+            }
+
+            alert("Signup successful! Login and continue.");
+            return true;
+        }
+    </script>
+</body>
+
+</html>

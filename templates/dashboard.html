@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Dashboard - Certificate Generator</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      background: #f4f4f4;
+      margin: 0;
+      padding: 20px;
+    }
+    h2, h3 {
+      color: #333;
+    }
+    form {
+      margin: 20px auto;
+      background: #fff;
+      padding: 20px;
+      border-radius: 10px;
+      display: inline-block;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+    input, button {
+      padding: 10px;
+      margin: 10px;
+      font-size: 16px;
+      width: 250px;
+    }
+    button {
+      cursor: pointer;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 5px;
+    }
+    button:hover {
+      background-color: #0056b3;
+    }
+    .logout {
+      margin-bottom: 10px;
+      display: inline-block;
+      text-decoration: none;
+      color: #007bff;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
+  <h2>Welcome {{ user }}</h2>
+  <a class="logout" href="/logout">Logout</a>
+
+  <h3>Generate Your Certificate</h3>
+
+  <form id="certForm">
+    <input type="text" id="name" placeholder="Your Name" required><br>
+    <input type="text" id="course" placeholder="Course Name" required><br>
+    <input type="date" id="date" required><br>
+    <button type="submit">Generate Certificate</button>
+  </form>
+
+  <script>
+    document.getElementById("certForm").addEventListener("submit", function (e) {
+      e.preventDefault();
+
+      const name = document.getElementById("name").value;
+      const course = document.getElementById("course").value;
+      const date = document.getElementById("date").value;
+
+      const certificateWindow = window.open("", "_blank");
+
+      certificateWindow.document.write(`
+        <html>
+        <head>
+          <title>Your Certificate</title>
+          <style>
+            body {
+              text-align: center;
+              font-family: Arial, sans-serif;
+              padding: 20px;
+              background: #f0f8ff; /* Light blue background */
+            }
+            canvas {
+              border: 2px solid #000;
+              margin-top: 20px;
+            }
+            button {
+              padding: 10px 20px;
+              font-size: 16px;
+              background-color: #007bff;
+              color: white;
+              border: none;
+              border-radius: 5px;
+              margin-top: 20px;
+              cursor: pointer;
+            }
+            button:hover {
+              background-color: #0056b3;
+            }
+            .back-button {
+              margin-top: 20px;
+              font-size: 16px;
+              color: #007bff;
+              text-decoration: none;
+              font-weight: bold;
+            }
+            .back-button:hover {
+              text-decoration: underline;
+            }
+          </style>
+        </head>
+        <body>
+          <h2>Here is your certificate</h2>
+          <canvas id="certCanvas" width="1000" height="700"></canvas><br>
+          <button onclick="download()">Download Certificate</button>
+          <a href="/dashboard" class="back-button">Back to Dashboard</a> <!-- Link to return to dashboard -->
+
+          <script>
+            const name = ${JSON.stringify(name)};
+            const course = ${JSON.stringify(course)};
+            const date = ${JSON.stringify(date)};
+
+            const canvas = document.getElementById("certCanvas");
+            const ctx = canvas.getContext("2d");
+
+            ctx.fillStyle = "#ffffff";
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            ctx.strokeStyle = "#000000";
+            ctx.lineWidth = 5;
+            ctx.strokeRect(20, 20, canvas.width - 40, canvas.height - 40);
+
+            // Logo
+            ctx.fillStyle = "#007bff";
+            ctx.font = "bold 30px Arial";
+            ctx.fillText("Ashitosh Institute", 40, 60);
+
+            // Title
+            ctx.fillStyle = "#000000";
+            ctx.font = "40px Georgia";
+            ctx.fillText("Certificate of Completion", 300, 130);
+
+            // Content
+            ctx.font = "28px Arial";
+            ctx.fillText("This is to certify that", 370, 200);
+
+            ctx.font = "34px bold Arial";
+            ctx.fillText(name, 420 - (name.length * 4), 260);
+
+            ctx.font = "28px Arial";
+            ctx.fillText("has successfully completed the course", 300, 310);
+
+            ctx.font = "32px bold Arial";
+            ctx.fillText(course, 420 - (course.length * 4), 370);
+
+            ctx.font = "24px Arial";
+            ctx.fillText("Date: " + date, 420, 450);
+
+            function download() {
+              const link = document.createElement("a");
+              link.download = "certificate.png";
+              link.href = canvas.toDataURL("image/png");
+              link.click();
+            }
+          <\/script>
+        </body>
+        </html>
+      `);
+
+      certificateWindow.document.close();
+    });
+  </script>
+
+</body>
+</html>
